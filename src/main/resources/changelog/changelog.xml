@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <!--  DATABASE GLOBAL CONFIG  -->
+    <include file="/changelog/changes/config.xml"/>
+
+    <!-- ENTITY TABLES -->
+    <include file="/changelog/changes/entity/schema.xml"/>
+    <include file="/changelog/changes/entity/role-table.xml"/>
+    <include file="/changelog/changes/entity/user-table.xml"/>
+
+    <!-- INSERT INIT DATA -->
+    <include file="/changelog/changes/data/role-data.xml"/>
+</databaseChangeLog>
