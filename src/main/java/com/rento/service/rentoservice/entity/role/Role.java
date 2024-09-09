@@ -10,7 +10,7 @@ import org.springframework.security.core.GrantedAuthority;
 import java.util.Objects;
 
 @Entity
-@Table(schema = Constants.DataBase.SCHEMA, name = Constants.DataBase.ROLE_TABLE)
+@Table(schema = Constants.DATA_BASE.SCHEMA, name = Constants.DATA_BASE.ROLE_TABLE)
 public class Role extends BaseEntity implements GrantedAuthority {
 
     @Column(name = "name", unique = true)

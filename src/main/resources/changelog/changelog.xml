@@ -8,10 +8,12 @@
     <include file="/changelog/changes/config.xml"/>
 
     <!-- ENTITY TABLES -->
-    <include file="/changelog/changes/entity/schema.xml"/>
+    <include file="/changelog/changes/entity/rento-schema.xml"/>
     <include file="/changelog/changes/entity/role-table.xml"/>
     <include file="/changelog/changes/entity/user-table.xml"/>
+    <include file="/changelog/changes/entity/user-role-table.xml"/>
 
     <!-- INSERT INIT DATA -->
     <include file="/changelog/changes/data/role-data.xml"/>
+    <include file="/changelog/changes/data/user-data.xml"/>
 </databaseChangeLog>

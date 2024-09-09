@@ -30,13 +30,8 @@
 
             <column name="phone" type="VARCHAR(12)" />
 
-            <column name="password" type="VARCHAR(50)" >
+            <column name="password" type="VARCHAR(100)" >
                 <constraints nullable="false"/>
-            </column>
-
-            <column name="role_id" type="UUID">
-                <constraints foreignKeyName="fk_user_role"
-                             references="rento_schema.role(uuid)"/>
             </column>
         </createTable>
     </changeSet>

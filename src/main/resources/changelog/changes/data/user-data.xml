@@ -6,6 +6,15 @@
 
     <changeSet author="author" id="1">
         <sql dbms="postgresql" endDelimiter=";">
+            INSERT INTO rento_schema.user (username, name, email, password)
+            VALUES (
+                'admin', 'admin', 'admin@mail.com', '$2a$10$qy43SxrBNSL2YmSOr3Jz7.GhUEN2S4IWIMT.Uw/0394oS52Onpxbm'
+            );
+            INSERT INTO rento_schema.user_role (user_id, role_id)
+            VALUES (
+                (SELECT uuid FROM rento_schema.user WHERE username = 'admin'),
+                (SELECT uuid FROM rento_schema.role WHERE name = 'admin')
+            );
         </sql>
     </changeSet>
 </databaseChangeLog>
