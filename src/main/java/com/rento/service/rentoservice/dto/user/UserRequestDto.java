@@ -1,15 +1,10 @@
 package com.rento.service.rentoservice.dto.user;
 
 public class UserRequestDto {
-
     private String username;
-
     private String name;
-
     private String email;
-
     private String phone;
-
     private String password;
 
     public String getUsername() {

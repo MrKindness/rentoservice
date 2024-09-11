@@ -1,9 +1,7 @@
 package com.rento.service.rentoservice.dto.auth;
 
 public class AuthRequestDto {
-
     private String username;
-
     private String password;
 
     public String getUsername() {

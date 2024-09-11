@@ -1,8 +1,8 @@
 package com.rento.service.rentoservice.facade;
 
-import com.rento.service.rentoservice.dto.user.UserRequestDto;
 import com.rento.service.rentoservice.dto.auth.AuthRequestDto;
 import com.rento.service.rentoservice.dto.auth.AuthResponseDto;
+import com.rento.service.rentoservice.dto.user.UserRequestDto;
 import com.rento.service.rentoservice.entity.user.User;
 import com.rento.service.rentoservice.entity.user.UserDetailsWrapper;
 import com.rento.service.rentoservice.service.UserService;
@@ -38,19 +38,21 @@ public class AuthFacade {
         User user = createEntity(request);
 
         user = this.userService.createUser(user);
+        String token = this.jwtTokenService.generateToken(new UserDetailsWrapper(user));
 
-        AuthResponseDto responseDto = new AuthResponseDto(this.jwtTokenService.generateToken(new UserDetailsWrapper(user)));
+        AuthResponseDto responseDto = new AuthResponseDto(token, true);
         return ResponseEntity.ok(responseDto);
     }
 
-    public ResponseEntity<AuthResponseDto> login(AuthRequestDto request) {
+    public ResponseEntity<AuthResponseDto> auth(AuthRequestDto request) {
         this.authenticationManager.authenticate(
-          new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword())
+                new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword())
         );
 
         User user = this.userService.getByUsername(request.getUsername());
+        String token = this.jwtTokenService.generateToken(new UserDetailsWrapper(user));
 
-        AuthResponseDto responseDto = new AuthResponseDto(this.jwtTokenService.generateToken(new UserDetailsWrapper(user)));
+        AuthResponseDto responseDto = new AuthResponseDto(token, true);
         return ResponseEntity.ok(responseDto);
     }
 

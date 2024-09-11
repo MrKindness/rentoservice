@@ -1,6 +1,6 @@
 package com.rento.service.rentoservice.controllerAdvice;
 
-import com.rento.service.rentoservice.dto.ErrorMessageDto;
+import com.rento.service.rentoservice.dto.auth.AuthResponseDto;
 import com.rento.service.rentoservice.exception.ValidationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 public class ValidationControllerAdvice {
 
     @ExceptionHandler({ValidationException.class})
-    public ResponseEntity<ErrorMessageDto> handleException(RuntimeException exception) {
-        ErrorMessageDto response = new ErrorMessageDto(exception.getMessage());
+    public ResponseEntity<AuthResponseDto> handleException(RuntimeException exception) {
+        AuthResponseDto response = new AuthResponseDto(exception.getMessage(), false);
 
-        return new ResponseEntity<>(response, new HttpHeaders(), ((ValidationException)exception).getHTTPStatus());
+        return new ResponseEntity<>(response, new HttpHeaders(), ((ValidationException) exception).getHTTPStatus());
     }
 }

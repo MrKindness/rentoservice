@@ -10,6 +10,8 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.oauth2.server.resource.web.BearerTokenAuthenticationEntryPoint;
+import org.springframework.security.oauth2.server.resource.web.access.BearerTokenAccessDeniedHandler;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -33,10 +35,19 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(req ->
-                        req.requestMatchers(Constants.API.AUTH.ROOT).permitAll()
+                .cors(AbstractHttpConfigurer::disable)
+                .authorizeHttpRequests(
+                        req -> req
+                                .requestMatchers(Constants.API.AUTH.ROOT).permitAll()
+                                .requestMatchers(Constants.API.AUTH.ROOT + Constants.API.AUTH.REGISTER).permitAll()
+                                .requestMatchers(Constants.API.USER.ROOT).hasAnyAuthority("admin", "user")
                                 .anyRequest()
                                 .authenticated()
+                )
+                .exceptionHandling(
+                        (ex) -> ex
+                                .authenticationEntryPoint(new BearerTokenAuthenticationEntryPoint())
+                                .accessDeniedHandler(new BearerTokenAccessDeniedHandler())
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(this.authenticationProvider)

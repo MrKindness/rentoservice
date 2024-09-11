@@ -27,9 +27,4 @@ public class UserController {
     public ResponseEntity<UserResponseDto> getUser(Authentication authentication) {
         return this.facade.getUser(authentication);
     }
-
-    @GetMapping(Constants.API.USER.ADMIN)
-    public ResponseEntity<UserResponseDto> getUserAdmin(Authentication authentication) {
-        return this.facade.getUser(authentication);
-    }
 }

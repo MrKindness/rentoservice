@@ -15,12 +15,10 @@ public class Constants {
         public static final class AUTH {
             public static final String ROOT = API.ROOT + "/auth";
             public static final String REGISTER = "/register";
-            public static final String LOGIN = "/login";
         }
 
         public static final class USER {
             public static final String ROOT = API.ROOT + "/user";
-            public static final String ADMIN = "/admin";
         }
     }
 }

@@ -30,8 +30,8 @@ public class AuthController {
         return this.facade.register(request);
     }
 
-    @PostMapping(Constants.API.AUTH.LOGIN)
-    public ResponseEntity<AuthResponseDto> login(@RequestBody AuthRequestDto request) {
-        return this.facade.login(request);
+    @PostMapping
+    public ResponseEntity<AuthResponseDto> auth(@RequestBody AuthRequestDto request) {
+        return this.facade.auth(request);
     }
 }

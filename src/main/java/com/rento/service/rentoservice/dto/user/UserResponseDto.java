@@ -3,34 +3,18 @@ package com.rento.service.rentoservice.dto.user;
 import com.rento.service.rentoservice.entity.user.User;
 
 public class UserResponseDto {
-
-    private String uuid;
-
     private String username;
-
     private String name;
-
     private String email;
-
     private String phone;
-
     private String role;
 
     public UserResponseDto(User user) {
-        this.uuid = user.getId().toString();
         this.username = user.getUsername();
         this.name = user.getName();
         this.email = user.getEmail();
         this.phone = user.getPhone();
         this.role = user.getRoles().iterator().next().getName();
-    }
-
-    public String getUuid() {
-        return uuid;
-    }
-
-    public void setUuid(String uuid) {
-        this.uuid = uuid;
     }
 
     public String getUsername() {

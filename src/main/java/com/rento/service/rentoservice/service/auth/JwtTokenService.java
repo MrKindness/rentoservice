@@ -27,7 +27,7 @@ public class JwtTokenService {
                 .setClaims(Map.of("role", details.getAuthorities().iterator().next().getAuthority()))
                 .setSubject(details.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 24))
+                .setExpiration(new Date((System.currentTimeMillis() + 1000) * 60 * 24))
                 .signWith(getSingInKey(), SignatureAlgorithm.HS256)
                 .compact();
     }

@@ -16,7 +16,7 @@ public class UserControllerAdvice {
     public ResponseEntity<ErrorMessageDto> handleException(RuntimeException exception) {
         ErrorMessageDto response = new ErrorMessageDto(exception.getMessage());
 
-        return new ResponseEntity<>(response, new HttpHeaders(), ((UserNotFoundException)exception).getHTTPStatus());
+        return new ResponseEntity<>(response, new HttpHeaders(), ((UserNotFoundException) exception).getHTTPStatus());
     }
 
     @ExceptionHandler({AuthenticationException.class})

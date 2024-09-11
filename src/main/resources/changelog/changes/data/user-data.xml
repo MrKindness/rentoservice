@@ -16,5 +16,16 @@
                 (SELECT uuid FROM rento_schema.role WHERE name = 'admin')
             );
         </sql>
+        <sql dbms="postgresql" endDelimiter=";">
+            INSERT INTO rento_schema.user (username, name, email, password)
+            VALUES (
+                'user', 'user', 'user@mail.com', '$2a$10$rzopopNQ5.FzBhN1pv6hluuVaKsjhzWx8hnVdr6Nle4lvppPWTIke'
+            );
+            INSERT INTO rento_schema.user_role (user_id, role_id)
+            VALUES (
+                (SELECT uuid FROM rento_schema.user WHERE username = 'user'),
+                (SELECT uuid FROM rento_schema.role WHERE name = 'user')
+            );
+        </sql>
     </changeSet>
 </databaseChangeLog>
