@@ -12,6 +12,7 @@
     <include file="/changelog/changes/entity/role-table.xml"/>
     <include file="/changelog/changes/entity/user-table.xml"/>
     <include file="/changelog/changes/entity/user-role-table.xml"/>
+    <include file="/changelog/changes/entity/transport-table.xml"/>
 
     <!-- INSERT INIT DATA -->
     <include file="/changelog/changes/data/role-data.xml"/>

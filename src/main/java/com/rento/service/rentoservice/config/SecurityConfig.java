@@ -4,8 +4,9 @@ import com.rento.service.rentoservice.utils.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -17,7 +18,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
-@EnableMethodSecurity
 public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
@@ -35,12 +35,16 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
-                .cors(AbstractHttpConfigurer::disable)
+                .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(
                         req -> req
-                                .requestMatchers(Constants.API.AUTH.ROOT).permitAll()
-                                .requestMatchers(Constants.API.AUTH.ROOT + Constants.API.AUTH.REGISTER).permitAll()
-                                .requestMatchers(Constants.API.USER.ROOT).hasAnyAuthority("admin", "user")
+                                .requestMatchers(HttpMethod.POST, Constants.API.AUTH.ROOT).permitAll()
+                                .requestMatchers(HttpMethod.POST, Constants.API.AUTH.ROOT + Constants.API.AUTH.REGISTER).permitAll()
+                                .requestMatchers(HttpMethod.GET, Constants.API.USER.ROOT).hasAnyAuthority("admin", "user")
+                                .requestMatchers(HttpMethod.POST, Constants.API.TRANSPORT.ROOT).hasAnyAuthority("admin", "user")
+                                .requestMatchers(
+                                        HttpMethod.GET, Constants.API.TRANSPORT.ROOT + Constants.API.TRANSPORT.OWNER_TRANSPORTS
+                                ).hasAnyAuthority("user")
                                 .anyRequest()
                                 .authenticated()
                 )

@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping(Constants.API.USER.ROOT)
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin
 public class UserController {
 
     private final UserFacade facade;

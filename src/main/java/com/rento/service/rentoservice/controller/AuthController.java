@@ -1,7 +1,7 @@
 package com.rento.service.rentoservice.controller;
 
 import com.rento.service.rentoservice.dto.auth.AuthRequestDto;
-import com.rento.service.rentoservice.dto.auth.AuthResponseDto;
+import com.rento.service.rentoservice.dto.SimpleResponseDto;
 import com.rento.service.rentoservice.dto.user.UserRequestDto;
 import com.rento.service.rentoservice.facade.AuthFacade;
 import com.rento.service.rentoservice.utils.Constants;
@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping(Constants.API.AUTH.ROOT)
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin
 public class AuthController {
 
     private final AuthFacade facade;
@@ -26,12 +26,12 @@ public class AuthController {
     }
 
     @PostMapping(Constants.API.AUTH.REGISTER)
-    public ResponseEntity<AuthResponseDto> register(@RequestBody UserRequestDto request) {
+    public ResponseEntity<SimpleResponseDto> register(@RequestBody UserRequestDto request) {
         return this.facade.register(request);
     }
 
     @PostMapping
-    public ResponseEntity<AuthResponseDto> auth(@RequestBody AuthRequestDto request) {
+    public ResponseEntity<SimpleResponseDto> auth(@RequestBody AuthRequestDto request) {
         return this.facade.auth(request);
     }
 }

@@ -1,6 +1,6 @@
 package com.rento.service.rentoservice.controllerAdvice;
 
-import com.rento.service.rentoservice.dto.ErrorMessageDto;
+import com.rento.service.rentoservice.dto.SimpleResponseDto;
 import com.rento.service.rentoservice.exception.RoleNotFoundException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 public class RoleControllerAdvice {
 
     @ExceptionHandler({RoleNotFoundException.class})
-    public ResponseEntity<ErrorMessageDto> handleException(RuntimeException exception) {
-        ErrorMessageDto response = new ErrorMessageDto(exception.getMessage());
+    public ResponseEntity<SimpleResponseDto> handleException(RuntimeException exception) {
+        SimpleResponseDto response = new SimpleResponseDto(false, exception.getMessage());
 
-        return new ResponseEntity<>(response, new HttpHeaders(), ((RoleNotFoundException)exception).getHTTPStatus());
+        return new ResponseEntity<>(response, new HttpHeaders(), ((RoleNotFoundException) exception).getHTTPStatus());
     }
 }

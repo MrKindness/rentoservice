@@ -3,9 +3,10 @@ package com.rento.service.rentoservice.utils;
 public class Constants {
     public static final class DATA_BASE {
         public static final String SCHEMA = "rento_schema";
-        public static final String USER_TABLE = "user";
         public static final String ROLE_TABLE = "role";
+        public static final String USER_TABLE = "user";
         public static final String USER_ROLE_TABLE = "user_role";
+        public static final String TRANSPORT_TABLE = "transport";
     }
 
     public static class API {
@@ -19,6 +20,11 @@ public class Constants {
 
         public static final class USER {
             public static final String ROOT = API.ROOT + "/user";
+        }
+
+        public static final class TRANSPORT {
+            public static final String ROOT = API.ROOT + "/transport";
+            public static final String OWNER_TRANSPORTS = "/owner";
         }
     }
 }

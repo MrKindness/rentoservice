@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet author="author" id="1">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="transport" schemaName="rento_schema"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="transport" schemaName="rento_schema">
+            <column name="uuid" type="UUID" defaultValue="uuid_generate_v4()">
+                <constraints primaryKey="true" nullable="false" unique="true"/>
+            </column>
+
+            <column name="owner_id" type="UUID">
+                <constraints nullable="false"
+                             foreignKeyName="fk_transport_user_owner"
+                             references="rento_schema.user(uuid)"
+                />
+            </column>
+
+            <column name="renter_id" type="UUID">
+                <constraints foreignKeyName="fk_transport_user_renter"
+                             references="rento_schema.user(uuid)"
+                />
+            </column>
+
+            <column name="brand" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="model" type="VARCHAR(50)" >
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="year" type="SMALLINT">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="location" type="VARCHAR(100)" />
+            <column name="address" type="VARCHAR(100)" />
+
+            <column name="status" type="VARCHAR(10)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="description" type="TEXT" />
+        </createTable>
+    </changeSet>
+</databaseChangeLog>

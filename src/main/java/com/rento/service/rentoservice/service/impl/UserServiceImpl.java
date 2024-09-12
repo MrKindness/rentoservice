@@ -36,7 +36,7 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public User createUser(User user) {
+    public User create(User user) {
         user.setRoles(Set.of(this.roleService.getByName("user")));
 
         validateCreateUser(user);
@@ -49,15 +49,15 @@ public class UserServiceImpl implements UserService {
             throw new ValidationException("Invalid id!");
         }
 
-        if (StringUtils.isEmpty(user.getUsername()) || this.repository.existsByUsername(user.getUsername())) {
+        if (StringUtils.isBlank(user.getUsername()) || this.repository.existsByUsername(user.getUsername())) {
             throw new ValidationException("Invalid username!");
         }
 
-        if (StringUtils.isEmpty(user.getName())) {
+        if (StringUtils.isBlank(user.getName())) {
             throw new ValidationException("Invalid name!");
         }
 
-        if (StringUtils.isEmpty(user.getEmail()) || this.repository.existsByEmail(user.getEmail())) {
+        if (StringUtils.isBlank(user.getEmail()) || this.repository.existsByEmail(user.getEmail())) {
             throw new ValidationException("Invalid email!");
         }
     }

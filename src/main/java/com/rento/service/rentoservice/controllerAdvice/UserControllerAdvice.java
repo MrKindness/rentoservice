@@ -1,6 +1,6 @@
 package com.rento.service.rentoservice.controllerAdvice;
 
-import com.rento.service.rentoservice.dto.ErrorMessageDto;
+import com.rento.service.rentoservice.dto.SimpleResponseDto;
 import com.rento.service.rentoservice.exception.UserNotFoundException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -13,15 +13,15 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 public class UserControllerAdvice {
 
     @ExceptionHandler({UserNotFoundException.class})
-    public ResponseEntity<ErrorMessageDto> handleException(RuntimeException exception) {
-        ErrorMessageDto response = new ErrorMessageDto(exception.getMessage());
+    public ResponseEntity<SimpleResponseDto> handleUserNotFoundException(RuntimeException exception) {
+        SimpleResponseDto response = new SimpleResponseDto(false, exception.getMessage());
 
         return new ResponseEntity<>(response, new HttpHeaders(), ((UserNotFoundException) exception).getHTTPStatus());
     }
 
     @ExceptionHandler({AuthenticationException.class})
-    public ResponseEntity<ErrorMessageDto> handleAuthenticationException(Exception ex) {
-        ErrorMessageDto response = new ErrorMessageDto("Authentication failed");
+    public ResponseEntity<SimpleResponseDto> handleAuthenticationException(Exception ex) {
+        SimpleResponseDto response = new SimpleResponseDto(false, "Authentication failed");
 
         return new ResponseEntity<>(response, new HttpHeaders(), HttpStatus.BAD_REQUEST);
     }
