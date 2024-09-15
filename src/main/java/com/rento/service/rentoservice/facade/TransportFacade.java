@@ -7,6 +7,7 @@ import com.rento.service.rentoservice.dto.transport.TransportUpdateRequestDto;
 import com.rento.service.rentoservice.entity.transport.Transport;
 import com.rento.service.rentoservice.entity.transport.TransportStatus;
 import com.rento.service.rentoservice.entity.user.User;
+import com.rento.service.rentoservice.exception.ValidationException;
 import com.rento.service.rentoservice.service.TransportService;
 import com.rento.service.rentoservice.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,14 +31,17 @@ public class TransportFacade {
         this.userService = userService;
     }
 
+    public ResponseEntity<List<TransportResponseDto>> getAllTransports() {
+        List<TransportResponseDto> response = this.service.getAllTransports().stream().map(TransportResponseDto::new).toList();
+
+        return ResponseEntity.ok(response);
+    }
+
     public ResponseEntity<List<TransportResponseDto>> getTransportsByOwner(Authentication authentication) {
         String username = authentication.getName();
         User user = this.userService.getByUsername(username);
 
-        List<TransportResponseDto> transports = this.service.getTransportsByOwner(user.getId())
-                .stream()
-                .map(TransportResponseDto::new)
-                .toList();
+        List<TransportResponseDto> transports = this.service.getTransportsByOwner(user.getId()).stream().map(TransportResponseDto::new).toList();
 
         return ResponseEntity.ok().body(transports);
     }
@@ -49,10 +53,7 @@ public class TransportFacade {
             userId = this.userService.getByUsername(username).getId();
         }
 
-        List<TransportResponseDto> transports = this.service.getAvailableTransports(userId)
-                .stream()
-                .map(TransportResponseDto::new)
-                .toList();
+        List<TransportResponseDto> transports = this.service.getAvailableTransports(userId).stream().map(TransportResponseDto::new).toList();
 
         return ResponseEntity.ok().body(transports);
     }
@@ -61,10 +62,7 @@ public class TransportFacade {
         String username = authentication.getName();
         User user = this.userService.getByUsername(username);
 
-        List<TransportResponseDto> transports = this.service.getRentedTransports(user.getId())
-                .stream()
-                .map(TransportResponseDto::new)
-                .toList();
+        List<TransportResponseDto> transports = this.service.getRentedTransports(user.getId()).stream().map(TransportResponseDto::new).toList();
 
         return ResponseEntity.ok().body(transports);
     }
@@ -94,8 +92,11 @@ public class TransportFacade {
         return ResponseEntity.ok().body(new TransportResponseDto(transport));
     }
 
-    public ResponseEntity<SimpleResponseDto> delete(UUID transportId) {
-        this.service.delete(transportId);
+    public ResponseEntity<SimpleResponseDto> delete(Authentication authentication, UUID transportId) {
+        String username = authentication.getName();
+        User user = this.userService.getByUsername(username);
+
+        this.service.delete(user.getId(), transportId);
 
         return ResponseEntity.ok().body(new SimpleResponseDto(true, "entity deleted!"));
     }
@@ -121,8 +122,15 @@ public class TransportFacade {
         transport.setYear(Integer.parseInt(request.getYear()));
         transport.setLocation(request.getLocation());
         transport.setAddress(request.getAddress());
-        transport.setStatus(TransportStatus.valueOf(request.getStatus()));
         transport.setDescription(request.getDescription());
+
+        TransportStatus status;
+        try {
+            status = TransportStatus.valueOf(request.getStatus());
+        } catch (Exception ex) {
+            throw new ValidationException("Invalid status!");
+        }
+        transport.setStatus(status);
 
         return transport;
     }

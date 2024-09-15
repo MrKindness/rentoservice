@@ -34,6 +34,11 @@ public class TransportController {
         this.facade = facade;
     }
 
+    @GetMapping(Constants.API.TRANSPORT.TRANSPORTS_ALL_ADMIN)
+    public ResponseEntity<List<TransportResponseDto>> getAllTransports() {
+        return this.facade.getAllTransports();
+    }
+
     @GetMapping(Constants.API.TRANSPORT.OWNER_TRANSPORTS)
     public ResponseEntity<List<TransportResponseDto>> getUserTransports(Authentication authentication) {
         return this.facade.getTransportsByOwner(authentication);
@@ -65,7 +70,7 @@ public class TransportController {
     }
 
     @DeleteMapping(Constants.API.TRANSPORT.TRANSPORT_BY_ID)
-    public ResponseEntity<SimpleResponseDto> delete(@PathVariable UUID transportId) {
-        return this.facade.delete(transportId);
+    public ResponseEntity<SimpleResponseDto> delete(Authentication authentication, @PathVariable UUID transportId) {
+        return this.facade.delete(authentication, transportId);
     }
 }

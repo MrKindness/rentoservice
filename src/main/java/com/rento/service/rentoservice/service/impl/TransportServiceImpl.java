@@ -32,6 +32,12 @@ public class TransportServiceImpl implements TransportService {
 
     @Transactional(readOnly = true)
     @Override
+    public List<Transport> getAllTransports() {
+        return repository.findAll();
+    }
+
+    @Transactional(readOnly = true)
+    @Override
     public List<Transport> getTransportsByOwner(UUID userId) {
         return this.repository.findAllByOwnerId(userId);
     }
@@ -112,7 +118,9 @@ public class TransportServiceImpl implements TransportService {
 
     @Transactional
     @Override
-    public void delete(UUID transportId) {
+    public void delete(UUID userId, UUID transportId) {
+        validateDeleteTransport(userId, transportId);
+
         this.repository.deleteById(transportId);
     }
 
@@ -167,6 +175,17 @@ public class TransportServiceImpl implements TransportService {
         Optional<User> user = this.userRepository.findById(transport.getRenter().getId());
         if (user.isEmpty() || user.get().getRoles().iterator().next().getAuthority().equals("admin")) {
             throw new ValidationException("Invalid user!");
+        }
+    }
+
+    private void validateDeleteTransport(UUID userId, UUID transportId) {
+        Optional<User> user = this.userRepository.findById(userId);
+        Transport transport = getById(transportId);
+
+        if (user.isEmpty() ||
+                (user.get().getRoles().iterator().next().getName().equals("user") && !transport.getOwner().getId().equals(userId))
+        ) {
+            throw new ValidationException("invalid user!");
         }
     }
 }

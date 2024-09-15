@@ -20,6 +20,10 @@ public class Constants {
 
         public static final class USER {
             public static final String ROOT = API.ROOT + "/user";
+            public static final String USER_UPDATE = "/update";
+            public static final String USER_ROLE = "/role";
+            public static final String USER_BY_ID = "/{userId}";
+            public static final String USERS_ALL_ADMIN = "/admin";
         }
 
         public static final class TRANSPORT {
@@ -29,6 +33,7 @@ public class Constants {
             public static final String AVAILABLE_TRANSPORTS = "/available";
             public static final String RENTED_TRANSPORTS = "/rented";
             public static final String RENT_TRANSPORT = "/rent" + TRANSPORT_BY_ID;
+            public static final String TRANSPORTS_ALL_ADMIN = "/admin";
         }
     }
 }
