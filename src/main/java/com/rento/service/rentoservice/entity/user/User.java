@@ -12,6 +12,7 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 
 import java.util.Set;
+import java.util.UUID;
 
 @Entity
 @Table(schema = Constants.DATA_BASE.SCHEMA, name = Constants.DATA_BASE.USER_TABLE)
@@ -40,6 +41,13 @@ public class User extends BaseEntity {
             inverseJoinColumns = {@JoinColumn(name = "role_id")}
     )
     private Set<Role> roles;
+
+    public User() {
+    }
+
+    public User(UUID userId) {
+        setId(userId);
+    }
 
     public String getUsername() {
         return username;

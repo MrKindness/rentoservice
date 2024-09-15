@@ -6,7 +6,19 @@ import java.util.List;
 import java.util.UUID;
 
 public interface TransportService {
+    List<Transport> getTransportsByOwner(UUID userId);
+
+    List<Transport> getAvailableTransports(UUID userId);
+
+    List<Transport> getRentedTransports(UUID userId);
+
+    Transport getById(UUID transportId);
+
+    void rentTransport(UUID userId, UUID transportId);
+
     Transport create(Transport transport);
 
-    List<Transport> getTransportsByOwner(UUID userId);
+    Transport update(Transport transport);
+
+    void delete(UUID transportId);
 }

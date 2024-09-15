@@ -11,8 +11,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.oauth2.server.resource.web.BearerTokenAuthenticationEntryPoint;
-import org.springframework.security.oauth2.server.resource.web.access.BearerTokenAccessDeniedHandler;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -41,17 +39,15 @@ public class SecurityConfig {
                                 .requestMatchers(HttpMethod.POST, Constants.API.AUTH.ROOT).permitAll()
                                 .requestMatchers(HttpMethod.POST, Constants.API.AUTH.ROOT + Constants.API.AUTH.REGISTER).permitAll()
                                 .requestMatchers(HttpMethod.GET, Constants.API.USER.ROOT).hasAnyAuthority("admin", "user")
-                                .requestMatchers(HttpMethod.POST, Constants.API.TRANSPORT.ROOT).hasAnyAuthority("admin", "user")
-                                .requestMatchers(
-                                        HttpMethod.GET, Constants.API.TRANSPORT.ROOT + Constants.API.TRANSPORT.OWNER_TRANSPORTS
-                                ).hasAnyAuthority("user")
+                                .requestMatchers(HttpMethod.GET, Constants.API.TRANSPORT.ROOT + Constants.API.TRANSPORT.AVAILABLE_TRANSPORTS).permitAll()
+                                .requestMatchers(HttpMethod.GET, Constants.API.TRANSPORT.ROOT + Constants.API.TRANSPORT.OWNER_TRANSPORTS).hasAuthority("user")
+                                .requestMatchers(HttpMethod.GET, Constants.API.TRANSPORT.ROOT + Constants.API.TRANSPORT.RENTED_TRANSPORTS).hasAuthority("user")
+                                .requestMatchers(HttpMethod.PUT, Constants.API.TRANSPORT.ROOT + Constants.API.TRANSPORT.RENT_TRANSPORT).hasAuthority("user")
+                                .requestMatchers(HttpMethod.POST, Constants.API.TRANSPORT.ROOT).hasAuthority("user")
+                                .requestMatchers(HttpMethod.PUT, Constants.API.TRANSPORT.ROOT).hasAuthority("user")
+                                .requestMatchers(HttpMethod.DELETE, Constants.API.TRANSPORT.ROOT).hasAnyAuthority("user", "admin")
                                 .anyRequest()
                                 .authenticated()
-                )
-                .exceptionHandling(
-                        (ex) -> ex
-                                .authenticationEntryPoint(new BearerTokenAuthenticationEntryPoint())
-                                .accessDeniedHandler(new BearerTokenAccessDeniedHandler())
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(this.authenticationProvider)

@@ -31,7 +31,7 @@ public class Transport extends BaseEntity {
     private String model;
 
     @Column(name = "year", nullable = false)
-    private Short year;
+    private Integer year;
 
     @Column(name = "location")
     private String location;
@@ -86,11 +86,11 @@ public class Transport extends BaseEntity {
         this.model = model;
     }
 
-    public Short getYear() {
+    public Integer getYear() {
         return year;
     }
 
-    public void setYear(Short year) {
+    public void setYear(Integer year) {
         this.year = year;
     }
 

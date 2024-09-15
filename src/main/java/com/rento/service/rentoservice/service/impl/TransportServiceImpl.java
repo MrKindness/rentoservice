@@ -2,6 +2,8 @@ package com.rento.service.rentoservice.service.impl;
 
 import com.rento.service.rentoservice.entity.transport.Transport;
 import com.rento.service.rentoservice.entity.transport.TransportStatus;
+import com.rento.service.rentoservice.entity.user.User;
+import com.rento.service.rentoservice.exception.TransportNotFoundException;
 import com.rento.service.rentoservice.exception.ValidationException;
 import com.rento.service.rentoservice.repository.TransportRepository;
 import com.rento.service.rentoservice.repository.UserRepository;
@@ -13,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -33,15 +36,87 @@ public class TransportServiceImpl implements TransportService {
         return this.repository.findAllByOwnerId(userId);
     }
 
+    @Transactional(readOnly = true)
+    @Override
+    public List<Transport> getAvailableTransports(UUID userId) {
+        if (Objects.isNull(userId)) {
+            return this.repository.findAllByStatusNot(TransportStatus.IN_USE);
+        }
+        return this.repository.findAllByOwnerIdNotAndStatusNot(userId, TransportStatus.IN_USE);
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public Transport getById(UUID transportId) {
+        return this.repository.findById(transportId).orElseThrow(
+                () -> new TransportNotFoundException(transportId.toString())
+        );
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public List<Transport> getRentedTransports(UUID userId) {
+        return this.repository.findAllByRenterId(userId);
+    }
+
+    @Transactional
+    @Override
+    public void rentTransport(UUID userId, UUID transportId) {
+        Transport transport = getById(transportId);
+
+        if (Objects.nonNull(transport.getRenter()) && transport.getRenter().getId().equals(userId)) {
+            return;
+        }
+
+        transport.setRenter(new User(userId));
+        validateRentTransport(transport);
+        transport.setStatus(TransportStatus.IN_USE);
+
+        this.repository.save(transport);
+    }
+
     @Transactional
     public Transport create(Transport transport) {
-        validateTransport(transport);
+        validateCreateTransport(transport);
         transport.setStatus(TransportStatus.PENDING);
 
         return this.repository.save(transport);
     }
 
-    private void validateTransport(Transport transport) {
+    @Transactional
+    @Override
+    public Transport update(Transport transport) {
+        validateUpdateTransport(transport);
+
+        Transport dbTransport = getById(transport.getId());
+
+        if (!dbTransport.getStatus().equals(transport.getStatus())
+                && TransportStatus.IN_USE.equals(transport.getStatus())) {
+            throw new ValidationException("Invalid status!");
+        }
+
+        dbTransport.setBrand(transport.getBrand());
+        dbTransport.setModel(transport.getModel());
+        dbTransport.setYear(transport.getYear());
+        dbTransport.setLocation(transport.getLocation());
+        dbTransport.setAddress(transport.getAddress());
+        dbTransport.setStatus(transport.getStatus());
+        dbTransport.setDescription(transport.getDescription());
+        if (TransportStatus.SERVICE.equals(transport.getStatus())
+                || TransportStatus.PENDING.equals(transport.getStatus())) {
+            dbTransport.setRenter(null);
+        }
+
+        return this.repository.save(dbTransport);
+    }
+
+    @Transactional
+    @Override
+    public void delete(UUID transportId) {
+        this.repository.deleteById(transportId);
+    }
+
+    private void validateCreateTransport(Transport transport) {
         if (Objects.nonNull(transport.getId())) {
             throw new ValidationException("Invalid id!");
         }
@@ -63,6 +138,35 @@ public class TransportServiceImpl implements TransportService {
 
         if (Objects.isNull(transport.getYear()) || transport.getYear() > 2030 || transport.getYear() < 1900) {
             throw new ValidationException("Invalid year!");
+        }
+    }
+
+    private void validateUpdateTransport(Transport transport) {
+        if (Objects.isNull(transport.getId()) || !this.repository.existsById(transport.getId())) {
+            throw new ValidationException("Invalid id!");
+        }
+
+        if (StringUtils.isEmpty(transport.getBrand())) {
+            throw new ValidationException("Invalid brand!");
+        }
+
+        if (StringUtils.isEmpty(transport.getModel())) {
+            throw new ValidationException("Invalid model!");
+        }
+
+        if (Objects.isNull(transport.getYear()) || transport.getYear() > 2030 || transport.getYear() < 1900) {
+            throw new ValidationException("Invalid year!");
+        }
+    }
+
+    private void validateRentTransport(Transport transport) {
+        if (TransportStatus.IN_USE.equals(transport.getStatus())) {
+            throw new ValidationException("Transport is already in use!");
+        }
+
+        Optional<User> user = this.userRepository.findById(transport.getRenter().getId());
+        if (user.isEmpty() || user.get().getRoles().iterator().next().getAuthority().equals("admin")) {
+            throw new ValidationException("Invalid user!");
         }
     }
 }

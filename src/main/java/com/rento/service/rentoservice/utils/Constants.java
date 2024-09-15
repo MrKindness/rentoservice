@@ -24,7 +24,11 @@ public class Constants {
 
         public static final class TRANSPORT {
             public static final String ROOT = API.ROOT + "/transport";
+            public static final String TRANSPORT_BY_ID = "/{transportId}";
             public static final String OWNER_TRANSPORTS = "/owner";
+            public static final String AVAILABLE_TRANSPORTS = "/available";
+            public static final String RENTED_TRANSPORTS = "/rented";
+            public static final String RENT_TRANSPORT = "/rent" + TRANSPORT_BY_ID;
         }
     }
 }

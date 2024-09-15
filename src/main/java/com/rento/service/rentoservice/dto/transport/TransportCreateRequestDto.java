@@ -1,6 +1,6 @@
 package com.rento.service.rentoservice.dto.transport;
 
-public class TransportRequestDto {
+public class TransportCreateRequestDto {
     private String owner;
     private String brand;
     private String model;
