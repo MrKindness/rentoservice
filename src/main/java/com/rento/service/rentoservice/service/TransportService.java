@@ -8,9 +8,11 @@ import java.util.UUID;
 public interface TransportService {
     List<Transport> getAllTransports();
 
-    List<Transport> getTransportsByOwner(UUID userId);
+    List<Transport> getPendingTransports();
 
     List<Transport> getAvailableTransports(UUID userId);
+
+    List<Transport> getTransportsByOwner(UUID userId);
 
     List<Transport> getRentedTransports(UUID userId);
 

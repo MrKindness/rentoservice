@@ -1,6 +1,5 @@
 package com.rento.service.rentoservice.service.impl;
 
-import com.rento.service.rentoservice.entity.role.Role;
 import com.rento.service.rentoservice.entity.transport.Transport;
 import com.rento.service.rentoservice.entity.transport.TransportStatus;
 import com.rento.service.rentoservice.entity.user.User;
@@ -61,42 +60,44 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public void update(String authUsername, User user) {
-        validateUpdateUser(authUsername, user);
+    public User createByAdmin(User user) {
+        validateCreateUser(user);
 
+        return this.repository.save(user);
+    }
+
+    @Transactional
+    @Override
+    public User update(String authUsername, User user) {
+        if (!Objects.equals(authUsername, user.getUsername()) || !this.repository.existsByUsername(authUsername)) {
+            throw new ValidationException("Invalid username!");
+        }
         User dbUser = getByUsername(authUsername);
+
+        validateUpdateUser(user, dbUser);
 
         dbUser.setName(user.getName());
         dbUser.setEmail(user.getEmail());
+        dbUser.setPhone(user.getPhone());
         dbUser.setPassword(user.getPhone());
         if (StringUtils.isNotBlank(user.getPassword())) {
             dbUser.setPassword(user.getPassword());
         }
 
-        this.repository.save(dbUser);
+        return this.repository.save(dbUser);
     }
 
     @Transactional
     @Override
-    public void updateRole(String username, String role) {
-        validateUpdateRole(username, role);
+    public void deleteByUsername(String username) {
+        User user = getByUsername(username);
 
-        User dbUser = getByUsername(username);
-        Role newRole = this.roleService.getByName(role);
-        dbUser.setRoles(Set.of(newRole));
-
-        this.repository.save(dbUser);
-    }
-
-    @Transactional
-    @Override
-    public void delete(UUID userId) {
-        Set<UUID> transportIds = this.transportRepository.findAllByOwnerId(userId).stream()
+        Set<UUID> transportIds = this.transportRepository.findAllByOwnerId(user.getId()).stream()
                 .map(Transport::getId)
                 .collect(Collectors.toSet());
         this.transportRepository.deleteAllById(transportIds);
 
-        List<Transport> transports = this.transportRepository.findAllByRenterId(userId).stream()
+        List<Transport> transports = this.transportRepository.findAllByRenterId(user.getId()).stream()
                 .peek(transport -> {
                             transport.setRenter(null);
                             transport.setStatus(TransportStatus.SERVICE);
@@ -104,7 +105,7 @@ public class UserServiceImpl implements UserService {
                 ).toList();
         this.transportRepository.saveAll(transports);
 
-        this.repository.deleteById(userId);
+        this.repository.deleteById(user.getId());
     }
 
     private void validateCreateUser(User user) {
@@ -120,32 +121,20 @@ public class UserServiceImpl implements UserService {
             throw new ValidationException("Invalid name!");
         }
 
-        if (StringUtils.isBlank(user.getEmail()) || this.repository.existsByEmail(user.getEmail())) {
-            throw new ValidationException("Invalid email!");
+        if (StringUtils.isBlank(user.getPassword())) {
+            throw new ValidationException("Invalid password!");
         }
     }
 
-    private void validateUpdateUser(String authUsername, User user) {
-        if (!Objects.equals(authUsername, user.getUsername()) || !this.repository.existsByUsername(authUsername)) {
-            throw new ValidationException("Invalid username!");
-        }
-
+    private void validateUpdateUser(User user, User dbUser) {
         if (StringUtils.isBlank(user.getName())) {
             throw new ValidationException("Invalid name!");
         }
 
-        if (StringUtils.isBlank(user.getEmail()) || this.repository.existsByEmail(user.getEmail())) {
+        if (StringUtils.isBlank(user.getEmail()) ||
+                (!dbUser.getEmail().equals(user.getEmail()) && this.repository.existsByEmail(user.getEmail()))
+        ) {
             throw new ValidationException("Invalid email!");
-        }
-    }
-
-    private void validateUpdateRole(String username, String role) {
-        if (!this.repository.existsByUsername(username)) {
-            throw new ValidationException("Invalid username!");
-        }
-
-        if (!"user".equals(role) && !"admin".equals(role)) {
-            throw new ValidationException("Invalid role!");
         }
     }
 }

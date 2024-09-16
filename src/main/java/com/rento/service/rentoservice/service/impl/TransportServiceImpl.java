@@ -36,19 +36,22 @@ public class TransportServiceImpl implements TransportService {
         return repository.findAll();
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     @Override
-    public List<Transport> getTransportsByOwner(UUID userId) {
-        return this.repository.findAllByOwnerId(userId);
+    public List<Transport> getPendingTransports() {
+        return this.repository.findAllByStatus(TransportStatus.PENDING);
     }
 
     @Transactional(readOnly = true)
     @Override
     public List<Transport> getAvailableTransports(UUID userId) {
-        if (Objects.isNull(userId)) {
-            return this.repository.findAllByStatusNot(TransportStatus.IN_USE);
-        }
-        return this.repository.findAllByOwnerIdNotAndStatusNot(userId, TransportStatus.IN_USE);
+        return this.repository.findAllByOwnerIdNotAndStatus(userId, TransportStatus.PENDING);
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public List<Transport> getTransportsByOwner(UUID userId) {
+        return this.repository.findAllByOwnerId(userId);
     }
 
     @Transactional(readOnly = true)

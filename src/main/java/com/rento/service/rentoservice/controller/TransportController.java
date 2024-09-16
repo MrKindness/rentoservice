@@ -34,11 +34,6 @@ public class TransportController {
         this.facade = facade;
     }
 
-    @GetMapping(Constants.API.TRANSPORT.TRANSPORTS_ALL_ADMIN)
-    public ResponseEntity<List<TransportResponseDto>> getAllTransports() {
-        return this.facade.getAllTransports();
-    }
-
     @GetMapping(Constants.API.TRANSPORT.OWNER_TRANSPORTS)
     public ResponseEntity<List<TransportResponseDto>> getUserTransports(Authentication authentication) {
         return this.facade.getTransportsByOwner(authentication);

@@ -2,6 +2,7 @@ package com.rento.service.rentoservice.dto.user;
 
 public class UserRequestDto {
     private String username;
+    private String role;
     private String name;
     private String email;
     private String phone;
@@ -13,6 +14,14 @@ public class UserRequestDto {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 
     public String getName() {

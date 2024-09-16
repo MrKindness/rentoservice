@@ -12,9 +12,9 @@ import java.util.UUID;
 public interface TransportRepository extends JpaRepository<Transport, UUID> {
     List<Transport> findAllByOwnerId(UUID ownerId);
 
-    List<Transport> findAllByOwnerIdNotAndStatusNot(UUID ownerId, TransportStatus status);
+    List<Transport> findAllByOwnerIdNotAndStatus(UUID ownerId, TransportStatus status);
 
-    List<Transport> findAllByStatusNot(TransportStatus status);
+    List<Transport> findAllByStatus(TransportStatus status);
 
     List<Transport> findAllByRenterId(UUID renterId);
 }

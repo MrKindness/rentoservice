@@ -3,7 +3,6 @@ package com.rento.service.rentoservice.service;
 import com.rento.service.rentoservice.entity.user.User;
 
 import java.util.List;
-import java.util.UUID;
 
 public interface UserService {
     List<User> getAllUsersExceptCaller(String callerUsername);
@@ -12,9 +11,9 @@ public interface UserService {
 
     User create(User user);
 
-    void update(String authUsername, User user);
+    User createByAdmin(User user);
 
-    void updateRole(String username, String role);
+    User update(String authUsername, User user);
 
-    void delete(UUID userId);
+    void deleteByUsername(String username);
 }

@@ -31,12 +31,6 @@ public class TransportFacade {
         this.userService = userService;
     }
 
-    public ResponseEntity<List<TransportResponseDto>> getAllTransports() {
-        List<TransportResponseDto> response = this.service.getAllTransports().stream().map(TransportResponseDto::new).toList();
-
-        return ResponseEntity.ok(response);
-    }
-
     public ResponseEntity<List<TransportResponseDto>> getTransportsByOwner(Authentication authentication) {
         String username = authentication.getName();
         User user = this.userService.getByUsername(username);
@@ -47,15 +41,22 @@ public class TransportFacade {
     }
 
     public ResponseEntity<List<TransportResponseDto>> getAvailableTransports(Authentication authentication) {
-        UUID userId = null;
-        if (Objects.nonNull(authentication)) {
-            String username = authentication.getName();
-            userId = this.userService.getByUsername(username).getId();
+        List<Transport> transports;
+
+        if (Objects.isNull(authentication)) {
+            transports = this.service.getPendingTransports();
+        } else {
+            User user = this.userService.getByUsername(authentication.getName());
+            if (user.getRoles().iterator().next().getName().equals("admin")) {
+                transports = this.service.getAllTransports();
+            } else {
+                transports = this.service.getAvailableTransports(user.getId());
+            }
         }
 
-        List<TransportResponseDto> transports = this.service.getAvailableTransports(userId).stream().map(TransportResponseDto::new).toList();
+        List<TransportResponseDto> response = transports.stream().map(TransportResponseDto::new).toList();
 
-        return ResponseEntity.ok().body(transports);
+        return ResponseEntity.ok().body(response);
     }
 
     public ResponseEntity<List<TransportResponseDto>> getRentedTransports(Authentication authentication) {
