@@ -17,4 +17,5 @@
     <!-- INSERT INIT DATA -->
     <include file="/changelog/changes/data/role-data.xml"/>
     <include file="/changelog/changes/data/user-data.xml"/>
+    <include file="/changelog/changes/data/transport-data.xml"/>
 </databaseChangeLog>

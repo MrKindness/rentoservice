@@ -5,6 +5,7 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
     <changeSet author="author" id="1">
+        <!--username: admin password: admin-->
         <sql dbms="postgresql" endDelimiter=";">
             INSERT INTO rento_schema.user (username, name, email, password)
             VALUES (
@@ -16,6 +17,7 @@
                 (SELECT uuid FROM rento_schema.role WHERE name = 'admin')
             );
         </sql>
+        <!--username: user password: user-->
         <sql dbms="postgresql" endDelimiter=";">
             INSERT INTO rento_schema.user (username, name, email, password)
             VALUES (
@@ -24,6 +26,54 @@
             INSERT INTO rento_schema.user_role (user_id, role_id)
             VALUES (
                 (SELECT uuid FROM rento_schema.user WHERE username = 'user'),
+                (SELECT uuid FROM rento_schema.role WHERE name = 'user')
+            );
+        </sql>
+        <!--username: john_doe password: johndoe-->
+        <sql dbms="postgresql" endDelimiter=";">
+            INSERT INTO rento_schema.user (username, name, email, phone, password)
+            VALUES (
+                'john_doe', 'John Doe', 'john.doe@mail.com', '025378198', '$2a$10$bIEY0n2JnFyW5hi0WUi.y.KxkUQ75kgAfQZsGA3mKekbc4mH2.mcS'
+            );
+            INSERT INTO rento_schema.user_role (user_id, role_id)
+            VALUES (
+                (SELECT uuid FROM rento_schema.user WHERE username = 'john_doe'),
+                (SELECT uuid FROM rento_schema.role WHERE name = 'user')
+            );
+        </sql>
+        <!--username: elvis_maggie password: elvismaggie-->
+        <sql dbms="postgresql" endDelimiter=";">
+            INSERT INTO rento_schema.user (username, name, email, phone, password)
+            VALUES (
+                'elvis_maggie', 'Elvis Maggie', 'elvis.maggie@mail.com', '983561209', '$2a$10$S7mVTSV7qX7pZCOfToWd5uU5RbMz.CEkNadawWVFBoTkTCLRFarQW'
+            );
+            INSERT INTO rento_schema.user_role (user_id, role_id)
+            VALUES (
+                (SELECT uuid FROM rento_schema.user WHERE username = 'elvis_maggie'),
+                (SELECT uuid FROM rento_schema.role WHERE name = 'user')
+            );
+        </sql>
+        <!--username: jessika_lovell  password: jessikalovell-->
+        <sql dbms="postgresql" endDelimiter=";">
+            INSERT INTO rento_schema.user (username, name, email, phone, password)
+            VALUES (
+                'jessika_lovell', 'Jessika Lovell', 'jessika.lovell@mail.com', '027653908', '$2a$10$dBb1OzGQABpQUm3Db91LSOrLPdzMPy2J1bStnMTEC7FJBsygpBPyK'
+            );
+            INSERT INTO rento_schema.user_role (user_id, role_id)
+            VALUES (
+                (SELECT uuid FROM rento_schema.user WHERE username = 'jessika_lovell'),
+                (SELECT uuid FROM rento_schema.role WHERE name = 'user')
+            );
+        </sql>
+        <!--username: pen_cora password: pencora-->
+        <sql dbms="postgresql" endDelimiter=";">
+            INSERT INTO rento_schema.user (username, name, email, phone, password)
+            VALUES (
+                'pen_cora', 'Pen Cora', 'pen.cora@mail.com', '9361426309', '$2a$10$nZo1SMcd3CdvtfUI76LNGeC5xSaXjiciK0sN4t6UNOeIEi5LCKK1S'
+            );
+            INSERT INTO rento_schema.user_role (user_id, role_id)
+            VALUES (
+                (SELECT uuid FROM rento_schema.user WHERE username = 'pen_cora'),
                 (SELECT uuid FROM rento_schema.role WHERE name = 'user')
             );
         </sql>

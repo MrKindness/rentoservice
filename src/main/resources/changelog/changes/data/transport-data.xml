@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet author="author" id="1">
+        <sql dbms="postgresql" endDelimiter=";">
+            INSERT INTO rento_schema.transport (owner_id, brand, model, year, status)
+            VALUES (
+                (SELECT uuid FROM rento_schema.user WHERE username = 'user'),
+                'Bmw',
+                'm8 coupe',
+                2024,
+                'PENDING'
+            );
+        </sql>
+        <sql dbms="postgresql" endDelimiter=";">
+            INSERT INTO rento_schema.transport (owner_id, renter_id, brand, model, year, status)
+            VALUES (
+                (SELECT uuid FROM rento_schema.user WHERE username = 'john_doe'),
+                (SELECT uuid FROM rento_schema.user WHERE username = 'user'),
+                'Mercedes',
+                'eqe 350',
+                2024,
+                'IN_USE'
+            );
+        </sql>
+        <sql dbms="postgresql" endDelimiter=";">
+            INSERT INTO rento_schema.transport (owner_id, brand, model, year, status)
+            VALUES (
+                (SELECT uuid FROM rento_schema.user WHERE username = 'elvis_maggie'),
+                'Honda',
+                'civic lx hatchback',
+                2024,
+                'PENDING'
+            );
+        </sql>
+        <sql dbms="postgresql" endDelimiter=";">
+            INSERT INTO rento_schema.transport (owner_id, brand, model, year, status)
+            VALUES (
+                (SELECT uuid FROM rento_schema.user WHERE username = 'jessika_lovell'),
+                'Renault',
+                'megane 4',
+                2020,
+                'PENDING'
+            );
+        </sql>
+        <sql dbms="postgresql" endDelimiter=";">
+            INSERT INTO rento_schema.transport (owner_id, brand, model, year, status)
+            VALUES (
+                (SELECT uuid FROM rento_schema.user WHERE username = 'pen_cora'),
+                'Volkswagen',
+                'Caravelle',
+                2023,
+                'PENDING'
+            );
+        </sql>
+    </changeSet>
+</databaseChangeLog>
