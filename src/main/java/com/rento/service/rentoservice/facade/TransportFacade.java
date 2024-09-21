@@ -40,6 +40,14 @@ public class TransportFacade {
         return ResponseEntity.ok().body(transports);
     }
 
+    public ResponseEntity<List<TransportResponseDto>> getAllTransports() {
+        List<Transport> transports = this.service.getAllTransports();
+
+        List<TransportResponseDto> response = transports.stream().map(TransportResponseDto::new).toList();
+
+        return ResponseEntity.ok().body(response);
+    }
+
     public ResponseEntity<List<TransportResponseDto>> getAvailableTransports(Authentication authentication) {
         List<Transport> transports;
 
@@ -47,11 +55,7 @@ public class TransportFacade {
             transports = this.service.getPendingTransports();
         } else {
             User user = this.userService.getByUsername(authentication.getName());
-            if (user.getRoles().iterator().next().getName().equals("admin")) {
-                transports = this.service.getAllTransports();
-            } else {
-                transports = this.service.getAvailableTransports(user.getId());
-            }
+            transports = this.service.getAvailableTransports(user.getId());
         }
 
         List<TransportResponseDto> response = transports.stream().map(TransportResponseDto::new).toList();

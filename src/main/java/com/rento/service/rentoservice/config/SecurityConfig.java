@@ -44,6 +44,7 @@ public class SecurityConfig {
                                 .requestMatchers(HttpMethod.PUT, Constants.API.USER.ROOT + Constants.API.USER.USER_UPDATE).hasAuthority("user")
                                 .requestMatchers(HttpMethod.DELETE, Constants.API.USER.ROOT + Constants.API.USER.USER_BY_USERNAME).hasAuthority("admin")
                                 .requestMatchers(HttpMethod.GET, Constants.API.TRANSPORT.ROOT + Constants.API.TRANSPORT.AVAILABLE_TRANSPORTS).permitAll()
+                                .requestMatchers(HttpMethod.GET, Constants.API.TRANSPORT.ROOT + Constants.API.TRANSPORT.ADMIN).hasAuthority("admin")
                                 .requestMatchers(HttpMethod.GET, Constants.API.TRANSPORT.ROOT + Constants.API.TRANSPORT.OWNER_TRANSPORTS).hasAuthority("user")
                                 .requestMatchers(HttpMethod.GET, Constants.API.TRANSPORT.ROOT + Constants.API.TRANSPORT.RENTED_TRANSPORTS).hasAuthority("user")
                                 .requestMatchers(HttpMethod.PUT, Constants.API.TRANSPORT.ROOT + Constants.API.TRANSPORT.RENT_TRANSPORT).hasAuthority("user")
