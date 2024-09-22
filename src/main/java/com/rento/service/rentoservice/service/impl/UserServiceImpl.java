@@ -117,6 +117,10 @@ public class UserServiceImpl implements UserService {
             throw new ValidationException("Invalid username!");
         }
 
+        if (StringUtils.isBlank(user.getEmail()) || this.repository.existsByEmail(user.getEmail())) {
+            throw new ValidationException("Invalid email!");
+        }
+
         if (StringUtils.isBlank(user.getName())) {
             throw new ValidationException("Invalid name!");
         }
