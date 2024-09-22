@@ -47,7 +47,6 @@ public class UserController {
         return this.facade.createUserByAdmin(request);
     }
 
-
     @PutMapping(Constants.API.USER.USER_UPDATE)
     public ResponseEntity<UserResponseDto> updateUser(Authentication authentication, @RequestBody UserRequestDto request) {
         return this.facade.updateUser(authentication, request);
